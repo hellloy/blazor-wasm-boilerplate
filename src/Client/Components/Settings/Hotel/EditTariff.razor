@@ -1,5 +1,4 @@
 ﻿@inject IStringLocalizer<EditTariff> Localizer
-@page "/tariffs/edit"
 
 <MudCard Class="pa-5 mb-5">
     <MudCardHeader>
@@ -31,7 +30,7 @@
         <MudCard Class="pa-5 mb-5 mt-5">
             <MudCardHeader>
                 <CardHeaderContent>
-                    <MudText Typo="Typo.button">@Localizer["Main information"]</MudText>
+                    <MudText Typo="Typo.button">@Localizer["Basic Information"]</MudText>
                 </CardHeaderContent>
             </MudCardHeader>
             <MudCardContent>
@@ -75,18 +74,18 @@
                 </CardHeaderContent>
                 <CardHeaderActions>
                     <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ma-2" OnClick="SelectRoomsModal" />
-                    @*  @if (!RoomsSelected)
+                    @*  @if (!roomsselected)
                     {
-                        <MudButton OnClick="SelectRoomsModal" ButtonType="ButtonType.Button" Size="Size.Medium" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add">@Localizer["Select rooms"]</MudButton>
+                        <mudbutton onclick="selectroomsmodal" buttontype="buttontype.button" size="size.medium" variant="variant.filled" color="color.primary" starticon="@icons.material.filled.add">@localizer["select rooms"]</mudbutton>
                     }
                     else
                     {
-                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ma-2" OnClick="SelectRoomsModal" />
+                        <mudiconbutton icon="@icons.material.filled.edit" variant="variant.filled" color="color.primary" size="size.small" class="ma-2" onclick="selectroomsmodal" />
                     } *@
                 </CardHeaderActions>
             </MudCardHeader>
-      @*       @if (RoomsSelected)
-            {
+           
+            
                 <MudCardContent>
                     <MudTable Items="@Tariff.Rooms" Elevation="0" Dense="true" Hover="true" Striped="true" Context="room">
 
@@ -101,24 +100,22 @@
                             <MudTd>@room.RoomTypeName</MudTd>
 
                         </RowTemplate>
+                        <NoRecordsContent>
+                        No rooms selected
+                       @*  <p class="mud-input-helper-text mud-input-error" style="border-top-color:@(Color.Error); border-top-style: solid;border-top-width: 2px">
+                            <div class="d-flex">
+                                <div class="mr-auto ma-2">
+                                    <ValidationMessage For="@(() => Tariff.Rooms)" />
+                                </div>
+                            </div>
+                        </p> *@
+                        </NoRecordsContent>
                         <PagerContent>
                             <TablePager />
                         </PagerContent>
                     </MudTable>
                 </MudCardContent>
-            }
-            else
-            {
-                <MudCardContent>
-                    <p class="mud-input-helper-text mud-input-error" style="border-top-color:@(Color.Error); border-top-style: solid;border-top-width: 2px">
-                        <div class="d-flex">
-                            <div class="mr-auto ma-2">
-                                <ValidationMessage For="@(() => Tariff.Rooms)" />
-                            </div>
-                        </div>
-                    </p>
-                </MudCardContent>
-            } *@
+           
         </MudCard>
 
         <MudCard Class="pa-5 mb-5">

@@ -9,5 +9,5 @@ public class TreeItemData(Guid id, string name, string roomTypeName, TreeItemTyp
     public string RoomTypeName { get; set; } = roomTypeName;
     public TreeItemType Type { get; set; } = type;
     public bool Selected { get; set; } = selected;
-    public HashSet<TreeItemData>? Rooms { get; set; }
+    public HashSet<TreeItemData> Rooms { get; set; } = new();
 }

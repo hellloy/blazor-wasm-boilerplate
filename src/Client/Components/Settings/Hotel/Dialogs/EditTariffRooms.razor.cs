@@ -13,7 +13,7 @@ public partial class EditTariffRooms
     private MudDialogInstance? MudDialog { get; set; }
 
     [Parameter]
-    public List<int> SelectedRooms { get; set; } = new();
+    public List<Guid>? SelectedRooms { get; set; } = new();
 
     [Inject]
     protected IRoomsClient RoomsClient { get; set; } = default!;
@@ -32,6 +32,10 @@ public partial class EditTariffRooms
         {
             _roomTypes = (ConvertToTree(allRooms) ?? throw new InvalidOperationException()).ToHashSet();
         }
+
+        _selectedValues = _roomTypes
+            .SelectMany(x => x.Rooms)
+            .Where(x => SelectedRooms?.Contains(x.Id) == true).ToHashSet();
     }
 
     private void AddRooms()
@@ -57,11 +61,11 @@ public partial class EditTariffRooms
         return response?.Data.ToList();
     }
 
-    private List<TreeItemData>? ConvertToTree(List<RoomDto>? rooms)
+    private IEnumerable<TreeItemData> ConvertToTree(IEnumerable<RoomDto> rooms)
     {
-        var roomGroups = rooms?.GroupBy(r => r.RoomType.Id);
+        var roomGroups = rooms.GroupBy(r => r.RoomType.Id);
 
-        var tree = roomGroups?.Select(g => new TreeItemData(
+        var tree = roomGroups.Select(g => new TreeItemData(
             g.Key,
             g.First().RoomType.Name,
             string.Empty,
@@ -73,9 +77,10 @@ public partial class EditTariffRooms
                 r.Name,
                 r.RoomType.Name,
                 TreeItemType.Room,
-                false)).ToHashSet()
+                SelectedRooms?.Contains(r.Id) == true)).ToHashSet()
         }).ToList();
 
         return tree;
     }
+
 }

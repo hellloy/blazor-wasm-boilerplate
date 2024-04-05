@@ -14,7 +14,7 @@
                 <MudNavLink Href="/settings/categories" Icon="@Icons.Material.Filled.Category">
                     @L["Room Categories"]
                 </MudNavLink>
-                <MudNavLink Href="/settings/types" Icon="@Icons.Material.Filled.MergeType">
+                <MudNavLink Href="/settings/types" Icon="@Icons.Material.Filled.TypeSpecimen">
                     @L["Room Types"]
                 </MudNavLink>
                 <MudNavLink Href="/settings/typeProperties" Icon="@Icons.Material.Filled.List">
@@ -22,6 +22,9 @@
                 </MudNavLink>
                 <MudNavLink Href="/settings/beds" Icon="@Icons.Material.Filled.Bed">
                     @L["Room Beds"]
+                </MudNavLink>
+                <MudNavLink Href="/settings/tariffs" Icon="@Icons.Material.Filled.MonetizationOn">
+                    @L["Tariffs"]
                 </MudNavLink>
             </MudNavMenu>
     </MudItem>
@@ -50,7 +53,11 @@
             case "typeProperties":
                     <EditRoomTypeProperties />
                 break;
+            case "tariffs":
+                <EditTariff/>
+                break;
             default:
+                <EditRooms />
                 break;
         }
     </MudItem>

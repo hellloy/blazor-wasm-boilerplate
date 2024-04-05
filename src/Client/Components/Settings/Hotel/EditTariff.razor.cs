@@ -1,5 +1,6 @@
 ﻿using FSH.BlazorWebAssembly.Client.Components.Settings.Hotel.Dialogs;
 using FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient;
+using FSH.BlazorWebAssembly.Client.Models;
 using MudBlazor;
 
 namespace FSH.BlazorWebAssembly.Client.Components.Settings.Hotel;
@@ -7,8 +8,6 @@ namespace FSH.BlazorWebAssembly.Client.Components.Settings.Hotel;
 public partial class EditTariff
 {
     private TariffVm Tariff = new();
-    
-    
 
     protected override void OnInitialized()
     {
@@ -20,11 +19,13 @@ public partial class EditTariff
         base.OnInitialized();
     }
 
+    [Obsolete]
     private async Task SelectRoomsModal()
     {
-        var parameters = new DialogParameters();
-        parameters.Add("SelectedRooms", Tariff.Rooms?.Select(x => x.RoomId).ToList());
-
+        var parameters = new DialogParameters
+        {
+            { "SelectedRooms", Tariff.Rooms?.Select(x => x.Id).ToList() }
+        };
         var options = new DialogOptions()
         {
             CloseButton = true,
@@ -33,18 +34,15 @@ public partial class EditTariff
             DisableBackdropClick = true
         };
 
-        var dialog = _dialogService.Show<EditTariffRooms>("Modal", parameters, options);
+        var dialog = await _dialogService.ShowAsync<EditTariffRooms>("Modal", parameters, options);
         var result = await dialog.Result;
 
         if (!result.Cancelled)
         {
-          // Tariff.Rooms = (List<EditTariffRooms.TreeItemData>)result.Data;
-            
+          Tariff.Rooms = (List<TreeItemData>)result.Data;
         }
     }
 }
-
-
 
 public class TariffVm
 {
@@ -56,7 +54,7 @@ public class TariffVm
     public DateTime? EndDate { get; set; }
     public bool Extended { get; set; }
     public List<TariffDayDto> Days { get; set; }
-    public List<TariffRoomDto> Rooms { get; set; }
+    public List<TreeItemData> Rooms { get; set; }
     public decimal? Price { get; set; }
 
 }
