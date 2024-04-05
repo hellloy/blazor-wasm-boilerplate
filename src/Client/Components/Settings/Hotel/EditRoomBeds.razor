@@ -1,0 +1,28 @@
+﻿@attribute [MustHavePermission(FSHAction.View, FSHResource.RoomBeds)]
+
+@inject IStringLocalizer<EditRoomBeds> L
+<MudGrid>
+    <MudItem sm="12">
+        <EntityTable @ref="_table" TEntity="RoomBedDto" TId="Guid" TRequest="RoomBedViewModel" Context="@Context">
+
+            <EditFormContent Context="context">
+                @if (!Context.AddEditModal.IsCreate)
+                {
+                    <MudItem xs="12">
+                        <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"Id"]" />
+                    </MudItem>
+                }
+                <MudItem xs="12" >
+                    <MudTextField Label="@L["Name"]" For="@(() => context.Name)" @bind-Value="context.Name" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField Label="@L["MaxOccupancy"]" For="@(() => context.MaxOccupancy)" @bind-Value="context.MaxOccupancy" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField Label="@L["Description"]" For="@(() => context.Description)" @bind-Value="context.Description" />
+                </MudItem>
+            </EditFormContent>
+            
+        </EntityTable>
+    </MudItem>
+</MudGrid>

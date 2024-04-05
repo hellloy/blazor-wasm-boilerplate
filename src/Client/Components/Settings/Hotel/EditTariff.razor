@@ -1,0 +1,157 @@
+﻿@inject IStringLocalizer<EditTariff> Localizer
+@page "/tariffs/edit"
+
+<MudCard Class="pa-5 mb-5">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <PageHeaderTitle Title="@Localizer["Tariff"]" 
+                       Description="@(Tariff.Id == Guid.Empty ? Localizer["Create"] : Localizer["Edit"])"></PageHeaderTitle>
+        </CardHeaderContent>
+        <CardHeaderActions>
+            @if (Tariff.Id != Guid.Empty)
+            {
+                <MudTooltip Text="@Localizer["Delete"]">
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Secondary" Size="Size.Medium" Class="ma-2" Disabled="@(Tariff.Id != Guid.Empty)" />
+                </MudTooltip>
+            }
+
+            <MudTooltip Text="@Localizer["Cancel"]">
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" Variant="Variant.Filled" Color="Color.Default" Size="Size.Medium" Class="ma-2" />
+            </MudTooltip>
+            <MudTooltip Text="@Localizer["Save"]">
+                <MudIconButton Icon="@Icons.Material.Filled.Save" Variant="Variant.Filled" Color="Color.Success" Size="Size.Medium" Class="ma-2" />
+            </MudTooltip>
+
+        </CardHeaderActions>
+    </MudCardHeader>
+</MudCard>
+
+<MudTabs Rounded="true" KeepPanelsAlive="true" Elevation="1" Color="Color.Primary">
+    <MudTabPanel Text="@Localizer["Main *"]">
+        <MudCard Class="pa-5 mb-5 mt-5">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.button">@Localizer["Main information"]</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudTextField For="() => Tariff.Name" InputMode="InputMode.text" Margin="Margin.Dense" Label="@Localizer["Name"]" @bind-Value="Tariff.Name" Required="true" Placeholder="@Localizer["Example: Season 1"]" HelperText="@Localizer["Enter name"]" HelperTextOnFocus="true" RequiredError="@Localizer["The tariff name required"]" />
+                    </MudItem>
+
+                    <MudItem xs="12" sm="6" md="6" lg="4">
+                        <MudDatePicker For="() => Tariff.StartDate" Required="true" Margin="Margin.Dense" @bind-Date="Tariff.StartDate" AutoClose="true" Label="@Localizer["Start date"]" HelperText=@Localizer["Starting date of using the tariff"] />
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="6" lg="4">
+                        <MudDatePicker For="() => Tariff.EndDate" Required="true" Margin="Margin.Dense" @bind-Date="Tariff.EndDate" AutoClose="true" Label="@Localizer["End date"]" HelperText="@Localizer["End date of using the tariff"]" />
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="6">
+                        @*<MudCard Elevation="0" Style="@($"background-color:{Colors.Grey.Lighten4};")">
+                        <MudCardHeader>
+                        <CardHeaderAvatar>
+                        <MudSwitch @bind-Checked="Tariff.Enable" Color="Color.Primary" />
+                        </CardHeaderAvatar>
+                        <CardHeaderContent>
+                        <MudText Typo="Typo.body1">@_localizer["This tariff active"]</MudText>
+                        <MudText Typo="Typo.body2">@_localizer["Enables or disables the tariff action"]</MudText>
+                        </CardHeaderContent>
+                        </MudCardHeader>
+                        </MudCard>*@
+                    </MudItem>
+                    @*<MudItem xs="12" sm="6" md="6" Class="d-flex align-center justify-end" Style="@($"background-color:{Colors.Grey.Lighten4};")">
+                    <MudText Class="mr-4 align-self-center" Typo="Typo.subtitle1">This tariff is active ?: </MudText>
+
+                    </MudItem>*@
+                </MudGrid>
+            </MudCardContent>
+        </MudCard>
+
+        <MudCard Class="pa-5 mb-5">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.button">@Localizer["Room Selection for Tariff Creation"]</MudText>
+
+                </CardHeaderContent>
+                <CardHeaderActions>
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ma-2" OnClick="SelectRoomsModal" />
+                    @*  @if (!RoomsSelected)
+                    {
+                        <MudButton OnClick="SelectRoomsModal" ButtonType="ButtonType.Button" Size="Size.Medium" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add">@Localizer["Select rooms"]</MudButton>
+                    }
+                    else
+                    {
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ma-2" OnClick="SelectRoomsModal" />
+                    } *@
+                </CardHeaderActions>
+            </MudCardHeader>
+      @*       @if (RoomsSelected)
+            {
+                <MudCardContent>
+                    <MudTable Items="@Tariff.Rooms" Elevation="0" Dense="true" Hover="true" Striped="true" Context="room">
+
+                        <HeaderContent>
+                            <MudTh>@Localizer["Id"]</MudTh>
+                            <MudTh>@Localizer["Room Number"]</MudTh>
+                            <MudTh>@Localizer["Room Type"]</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd>@room.Id</MudTd>
+                            <MudTd>@room.Name</MudTd>
+                            <MudTd>@room.RoomTypeName</MudTd>
+
+                        </RowTemplate>
+                        <PagerContent>
+                            <TablePager />
+                        </PagerContent>
+                    </MudTable>
+                </MudCardContent>
+            }
+            else
+            {
+                <MudCardContent>
+                    <p class="mud-input-helper-text mud-input-error" style="border-top-color:@(Color.Error); border-top-style: solid;border-top-width: 2px">
+                        <div class="d-flex">
+                            <div class="mr-auto ma-2">
+                                <ValidationMessage For="@(() => Tariff.Rooms)" />
+                            </div>
+                        </div>
+                    </p>
+                </MudCardContent>
+            } *@
+        </MudCard>
+
+        <MudCard Class="pa-5 mb-5">
+            <MudCardHeader>
+                <MudText Typo="Typo.button">@Localizer["Whole room pricing"]</MudText>
+            </MudCardHeader>
+            <MudCardContent>
+
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudGrid>
+                            <MudItem xs="12" sm="12" md="6" lg="4">
+                                <MudNumericField T="decimal?" For="() => Tariff.Price" Required="true" Min="1" Class="mb-5" Variant="Variant.Outlined" RequiredError="@Localizer["Field price required"]" Label="@Localizer["Price per room"]" @bind-Value="Tariff.Price" Placeholder="@Localizer["Example: 1000"]" HelperText="@Localizer["Enter price for room"]" />
+                            </MudItem>
+
+                        </MudGrid>
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+        </MudCard>
+
+        <MudCard Class="pa-5 mb-5">
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudTextField For="@(() => Tariff.Description)" Variant="Variant.Text" Margin="Margin.Dense" @bind-Value="Tariff.Description" Label="@Localizer["Description"]" Lines="2" HelperText="@Localizer["Any comments for this tariff, if needed"]" />
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+        </MudCard>
+
+
+
+    </MudTabPanel>
+</MudTabs>
+

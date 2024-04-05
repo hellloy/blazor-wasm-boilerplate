@@ -27,7 +27,8 @@
 @using FSH.BlazorWebAssembly.Client.Infrastructure.Common
 @using FSH.BlazorWebAssembly.Client.Infrastructure.Notifications
 @using FSH.BlazorWebAssembly.Client.Infrastructure.Preferences
-@using FSH.WebApi.Shared.Authorization
+@using FSH.BlazorWebAssembly.Client.Components.Settings.Hotel;
+@using HMS.Api.Shared.Authorization
 @using Blazored.LocalStorage
 @using Mapster
 @using MediatR.Courier
@@ -40,3 +41,4 @@
 @inject IDialogService DialogService
 @inject IConfiguration Config
 @inject IClientPreferenceManager ClientPreferences
+@inject IDialogService _dialogService

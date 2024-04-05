@@ -24,7 +24,7 @@ public static class CustomColors
     {
         public const string Primary = "#3eaf7c";
         public const string Secondary = "#2196f3";
-        public const string Background = "#FFF";
+        public const string Background = "#FAFAFA";
         public const string AppbarBackground = "#FFF";
         public const string AppbarText = "#6e6e6e";
     }

@@ -8,7 +8,7 @@
 
 <EntityTable TEntity="BrandDto" TId="Guid" TRequest="UpdateBrandRequest" Context="@Context">
 
-    <EditFormContent>
+    <EditFormContent Context="context">
         @if (!Context.AddEditModal.IsCreate)
         {
             <MudItem xs="12" md="6">
@@ -43,10 +43,10 @@
             },
             idFunc: brand => brand.Id,
             searchFunc: async filter => (await BrandsClient
-                .SearchAsync(filter.Adapt<SearchBrandsRequest>()))
+                .SearchAsync("1",filter.Adapt<SearchBrandsRequest>()))
                 .Adapt<PaginationResponse<BrandDto>>(),
-            createFunc: async brand => await BrandsClient.CreateAsync(brand.Adapt<CreateBrandRequest>()),
-            updateFunc: async (id, brand) => await BrandsClient.UpdateAsync(id, brand),
-            deleteFunc: async id => await BrandsClient.DeleteAsync(id),
+            createFunc: async brand => await BrandsClient.CreateAsync("1",brand.Adapt<CreateBrandRequest>()),
+            updateFunc: async (id, brand) => await BrandsClient.UpdateAsync(id, "1", brand),
+            deleteFunc: async id => await BrandsClient.DeleteAsync(id, "1"),
             exportAction: string.Empty);
 }

@@ -5,7 +5,7 @@ using System.Text.Json.Nodes;
 using FSH.BlazorWebAssembly.Client.Infrastructure.Auth;
 using FSH.BlazorWebAssembly.Client.Infrastructure.Common;
 using FSH.BlazorWebAssembly.Client.Infrastructure.Notifications;
-using FSH.WebApi.Shared.Notifications;
+using HMS.Api.Shared.Notifications;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.SignalR.Client;

@@ -1,0 +1,10 @@
+﻿@attribute [MustHavePermission(FSHAction.View, FSHResource.RoomTypes)]
+@inject IStringLocalizer<RoomTypes> L
+
+
+<MudGrid>
+    <MudItem sm="12">
+        <EntityTable @ref="_table" TEntity="RoomTypeDto" TId="Guid" TRequest="RoomTypeViewModel" Context="@Context" OnStartEdit="OnStartEdit" DisableModal="true">
+        </EntityTable>
+    </MudItem>
+</MudGrid>

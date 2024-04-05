@@ -1,0 +1,102 @@
+﻿@using FSH.BlazorWebAssembly.Client.Infrastructure.Tools
+@using System.ComponentModel.DataAnnotations
+<MudDialog>
+    <DialogContent>
+        <MudTable @ref="_mudTable" Striped="true" Items="@_roomTypeProperties" Dense="true" Loading="_loading" Elevation="0" MultiSelection="true" @bind-SelectedItems="_selectedItems" Hover="true">
+            <ToolBarContent>
+                <MudAlert Class="me-5" Severity="Severity.Info">Mark Preferred Properties</MudAlert>
+                <MudSpacer />
+                <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.Edit" Size="Size.Medium" OnClick="EditProperties" Class="ms-5" Color="Color.Primary">Edit</MudButton>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh>Name</MudTh>
+                <MudTh>Description</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Description">@TextTools.TruncateText(context.Description, 250)</MudTd>
+            </RowTemplate>
+           
+            <PagerContent>
+            @if (_roomTypeProperties is {Count: > 20})
+            {
+                <MudTablePager PageSizeOptions="new[] {20}"/>
+            }
+            </PagerContent>
+           
+                
+            </MudTable>
+
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="Cancel">Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Ok">Save</MudButton>
+        </DialogActions>
+    </MudDialog>
+
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public List<RoomPropertyRoomTypeDto> RoomTypePropertiesParam { get; set; } = new();
+
+    [Parameter]
+    [EditorRequired]
+    public Guid RoomTypeId { get; set; }
+
+    [Inject]
+    IRoomTypePropertiesClient RoomTypePropertiesClient { get; set; } = default!;
+
+    
+    private MudTable<RoomTypePropertyDto> _mudTable;
+    private List<RoomTypePropertyDto>? _roomTypeProperties = new();
+    private HashSet<RoomTypePropertyDto> _selectedItems = new();
+
+    private bool _loading;
+
+    /// <summary>
+    /// init
+    /// </summary>
+    protected override async Task OnInitializedAsync()
+    {
+        ConfigureDialog();
+
+        _loading = true;
+
+        var result = await ApiHelper.ExecuteCallGuardedAsync(
+            () => RoomTypePropertiesClient.SearchAsync("1", new SearchRoomTypePropertyRequest { PageNumber = 0, PageSize = 100 }),
+            Snackbar
+        );
+    
+        _roomTypeProperties = result?.Data.Adapt<List<RoomTypePropertyDto>>();
+
+        if (_roomTypeProperties != null)
+        {
+            var selectedIds = RoomTypePropertiesParam.Select(p => p.RoomTypeProperty.Id);
+            _selectedItems.UnionWith(_roomTypeProperties.Where(x => selectedIds.Contains(x.Id)));
+        }
+
+        _loading = false;
+    }
+
+    private void ConfigureDialog()
+    {
+        MudDialog.Options.CloseButton = true;
+        MudDialog.Options.MaxWidth = MaxWidth.Large;
+        MudDialog.SetOptions(MudDialog.Options);
+    }
+
+    private void Ok() => MudDialog.Close(DialogResult.Ok(_selectedItems.Select(x => new RoomPropertyRoomTypeDto
+    {
+        RoomTypePropertyId = x.Id,
+            RoomTypeId = RoomTypeId,
+            RoomTypeProperty = x.Adapt<RoomTypePropertyDto>(),
+    }).ToList()));
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private void EditProperties() => Navigation.NavigateTo("/settings/typeProperties");
+
+}

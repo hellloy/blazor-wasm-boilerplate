@@ -1,4 +1,4 @@
-﻿using FSH.WebApi.Shared.Authorization;
+﻿using HMS.Api.Shared.Authorization;
 using Microsoft.AspNetCore.Authorization;
 
 namespace FSH.BlazorWebAssembly.Client.Infrastructure.Auth;

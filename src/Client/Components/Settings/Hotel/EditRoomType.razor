@@ -1,0 +1,131 @@
+﻿@using FSH.BlazorWebAssembly.Client.Infrastructure.Tools
+
+
+@inject IStringLocalizer<EditRoomType> Localizer
+<MudContainer>
+    <EditForm Model="@RoomTypeDto" OnValidSubmit="SaveRoomTypeAsync">
+        <DataAnnotationsValidator />
+        <CustomValidation @ref="_customValidation" />
+        <MudCard Class="pa-5 mb-5">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <PageHeaderTitle Title="@Localizer["Edit"]" Description="@Localizer["Room type"]"/>
+                </CardHeaderContent>
+                <CardHeaderActions>
+                    <MudTooltip Text="@Localizer["Cancel"]">
+                        <MudButton DisableElevation Variant="Variant.Filled" Color="Color.Default" StartIcon="@Icons.Material.Filled.ArrowBack" OnClick="BackToList" IconColor="Color.Surface" Class="ma-2">@Localizer["Back"]</MudButton>
+                    </MudTooltip>
+                   
+                    <MudTooltip Text="@Localizer["Save"]">
+                        <MudButton DisableElevation Variant="Variant.Filled" Color="Color.Success" ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Surface">@Localizer["Save"]</MudButton>
+                    </MudTooltip>
+                        @if (!string.IsNullOrEmpty(Id))
+                    {
+                        <MudTooltip Text="@Localizer["Delete"]">
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error" OnClick="Delete" Size="Size.Medium" Class="ma-2" />
+                        </MudTooltip>
+                    }
+                </CardHeaderActions>
+            </MudCardHeader>
+            @if (_loading)
+            {
+                <MudProgressLinear Color="Color.Secondary" Indeterminate="true"/>
+            }
+        </MudCard>
+
+        <MudCard Class="pa-5 mb-5">
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="8" >
+                        <MudTextField T="string" Label="@Localizer["Name"]" TextChanged="Test" For="@(() => RoomTypeDto.Name)" @bind-Value="RoomTypeDto.Name" Required="true" />
+                    </MudItem>
+                    <MudItem xs="4" >
+                        <MudTextField T="string" Label="@Localizer["Short Code"]" TextChanged="Test" For="@(() => RoomTypeDto.Code)" @bind-Value="RoomTypeDto.Code" Required="true" />
+                    </MudItem>
+                    <MudItem xs="12">
+                            <MudTextField T="string" Label="@Localizer["Description"]" For="@(() => RoomTypeDto.Description)" @bind-Value="RoomTypeDto.Description" Required="true" />
+                    </MudItem>
+                    <MudItem xs="6" lg="2">
+                        <MudNumericField T="int" Min="1" Label="@Localizer["Max Occupancy"]"  For="@(() => RoomTypeDto.MaxOccupancy)" @bind-Value="RoomTypeDto.MaxOccupancy" Required="true" />
+                    </MudItem>
+                    <MudItem xs="6" lg="2">
+                            <MudNumericField T="decimal" Min="1" Label="@Localizer["Base Price"]" For="@(() => RoomTypeDto.BasePrice)"  @bind-Value="RoomTypeDto.BasePrice" Required="true" />
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+        </MudCard>
+
+        <MudGrid>
+            <MudItem xs="12">
+                @if (RoomTypeDto.RoomTypeBeds is {Count: > 0})
+                {
+                    <MudTable Items="@RoomTypeDto.RoomTypeBeds" Hover="true" Dense="true" Striped="true" FixedHeader="true" Class="pa-5 mb-5">
+                        <ToolBarContent>
+                            <MudText Typo="Typo.h6">Beds in the room</MudText>
+                            <MudSpacer />
+                            <MudButton Class="w-200" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Hotel" Size="Size.Medium" OnClick="OpenAddRoomBedsTypeDialogAsync" Color="Color.Secondary">Edit beds</MudButton>
+                        </ToolBarContent>
+                        <HeaderContent>
+                            <MudTh>Name</MudTh>
+                            <MudTh>Description</MudTh>
+                            <MudTh>Size</MudTh>
+                            <MudTh>Occupancy</MudTh>
+                            <MudTh>Quantity</MudTh>
+                        </HeaderContent>
+                        <RowTemplate Context="roomBedVm">
+                            <MudTd DataLabel="Name">@roomBedVm.RoomBed?.Name</MudTd>
+                            <MudTd DataLabel="Description">@TextTools.TruncateText(roomBedVm.RoomBed?.Description, 150)</MudTd>
+                            <MudTd DataLabel="Size">@roomBedVm.RoomBed?.Size</MudTd>
+                            <MudTd DataLabel="Occupancy">@roomBedVm.RoomBed?.MaxOccupancy</MudTd>
+                            <MudTd DataLabel="Quantity">@roomBedVm.Quantity</MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                }
+                else
+                {
+                    <MudCard Class="pa-5 mb-5">
+                        <MudCardContent>
+                            <MudStack Justify="Justify.Center" AlignItems="AlignItems.Center">
+                                <MudButton Class="w-200" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Hotel" Size="Size.Medium" OnClick="OpenAddRoomBedsTypeDialogAsync" Color="Color.Secondary">Add beds</MudButton>
+                            </MudStack>
+                        </MudCardContent>
+                    </MudCard>
+                }
+                
+            </MudItem>
+            <MudItem xs="12">
+                @if (RoomTypeDto.RoomTypeProperties is {Count: > 0})
+                {
+                    <MudTable Items="@RoomTypeDto.RoomTypeProperties" Hover="true" Dense="true" Striped="true" FixedHeader="true" Class="pa-5 mb-5">
+                        <ToolBarContent>
+                            <MudText Typo="Typo.h6">Room additional properties</MudText>
+                            <MudSpacer/>
+                            <MudButton Class="w-200" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Checklist" Size="Size.Medium" Color="Color.Secondary" OnClick="OpenAddRoomTypesPropertiesDialog">Edit properties</MudButton>
+                        </ToolBarContent>
+                        <HeaderContent>
+                            <MudTh>Name</MudTh>
+                            <MudTh>Description</MudTh>
+                        </HeaderContent>
+                        <RowTemplate Context="roomBedVm">
+                            <MudTd DataLabel="Name">@roomBedVm.RoomTypeProperty.Name</MudTd>
+                                <MudTd DataLabel="Description">@roomBedVm.RoomTypeProperty.Description</MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                }
+                else
+                {
+                    <MudCard Class="pa-5 mb-5">
+                        <MudCardContent>
+                            <MudStack Justify="Justify.Center" AlignItems="AlignItems.Center">
+                                <MudButton Class="w-200" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Checklist" Size="Size.Medium" Color="Color.Secondary" OnClick="OpenAddRoomTypesPropertiesDialog">Add properties</MudButton>
+                            </MudStack>
+                        </MudCardContent>
+                    </MudCard>
+                }
+               
+            </MudItem>
+        </MudGrid>
+           
+        
+    </EditForm>
+</MudContainer>

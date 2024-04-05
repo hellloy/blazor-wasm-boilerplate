@@ -1,4 +1,4 @@
-﻿namespace FSH.WebApi.Shared.Notifications;
+﻿namespace HMS.Api.Shared.Notifications;
 
 public class JobNotification : INotificationMessage
 {

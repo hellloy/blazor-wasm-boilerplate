@@ -1,0 +1,61 @@
+﻿@using FSH.BlazorWebAssembly.Client.Enums
+<MudDialog Style="background-color:whitesmoke">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Update" Class="mr-3 mb-n1" />
+            Add rooms to tariff
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12" md="6" lg="6" xl="6">
+                <MudCard >
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.h6">Please select rooms</MudText>
+                        </CardHeaderContent>
+                        <CardHeaderActions>
+                            <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />
+                        </CardHeaderActions>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        @* <CategoryAutocomplete For="@(() => SelectedRoomTypeId)" @bind-Value="SelectedRoomTypeId" /> *@
+                        <MudTreeView Style="min-height: 500px; max-height: 500px;"  MultiSelection="true"  Items="_roomTypes" Context="roomType" ExpandOnClick="true" @bind-SelectedValues="_selectedValues">
+                            <ItemTemplate>
+                                <MudTreeViewItem Items="@roomType.Rooms" Value="roomType" Text="@roomType.Name" @bind-Selected="roomType.Selected"/>
+                            </ItemTemplate>
+                        </MudTreeView>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+            <MudItem xs="12" md="6" lg="6" xl="6">
+                <MudTable Items="@_selectedValues.Where(x=>x.Type == TreeItemType.Room)" Dense="true" Hover="true" Striped="true"  Style="min-height: 596px; max-height: 596px;">
+                    <ToolBarContent>
+                        <MudText Typo="Typo.h6">Selected rooms</MudText>
+                    </ToolBarContent>
+                    <HeaderContent>
+                        <MudTh>Id</MudTh>
+                        <MudTh>Name</MudTh>
+                        <MudTh>Room Type</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Nr">@context.Id</MudTd>
+                        <MudTd DataLabel="Name">@context.Name</MudTd>
+                        <MudTd DataLabel="Type">@context.RoomTypeName</MudTd>
+                    </RowTemplate>
+                    <NoRecordsContent>
+                        <p>No rooms selected</p>
+                    </NoRecordsContent>
+                    <PagerContent>
+                        <MudTablePager />
+                    </PagerContent>
+                </MudTable>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="AddRooms">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+

@@ -23,8 +23,15 @@ public partial class EntityTable<TEntity, TId, TRequest>
 
     [Parameter]
     public string? SearchString { get; set; }
+
     [Parameter]
     public EventCallback<string> SearchStringChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<TEntity> OnStartEdit { get; set; }
+
+    [Parameter]
+    public bool DisableModal { get; set; }
 
     [Parameter]
     public RenderFragment? AdvancedSearchContent { get; set; }
@@ -225,13 +232,19 @@ public partial class EntityTable<TEntity, TId, TRequest>
 
     private async Task InvokeModal(TEntity? entity = default)
     {
+        await OnStartEdit.InvokeAsync(entity);
+        if (DisableModal)
+        {
+            return;
+        }
+
         bool isCreate = entity is null;
 
         var parameters = new DialogParameters()
         {
             { nameof(AddEditModal<TRequest>.ChildContent), EditFormContent },
             { nameof(AddEditModal<TRequest>.OnInitializedFunc), Context.EditFormInitializedFunc },
-            { nameof(AddEditModal<TRequest>.IsCreate), isCreate }
+            { nameof(AddEditModal<TRequest>.IsCreate), isCreate },
         };
 
         Func<TRequest, Task> saveFunc;

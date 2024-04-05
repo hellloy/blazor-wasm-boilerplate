@@ -36,7 +36,7 @@ public class CustomValidation : ComponentBase
         {
             foreach (var err in errors)
             {
-                _messageStore?.Add(CurrentEditContext.Field(err.Key), err.Value);
+                _messageStore?.Add(CurrentEditContext.Field(char.ToUpper(err.Key[0]) + err.Key.Substring(1)), err.Value);
             }
 
             CurrentEditContext.NotifyValidationStateChanged();

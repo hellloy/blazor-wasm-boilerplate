@@ -28,6 +28,10 @@ public static class ApiHelper
         {
             if (ex.Result.Errors is not null)
             {
+                foreach (var item in ex.Result.Errors)
+                {
+                    Console.WriteLine(item.Value);
+                }
                 customValidation?.DisplayErrors(ex.Result.Errors);
             }
             else

@@ -1,0 +1,61 @@
+﻿@using FSH.BlazorWebAssembly.Client.Components.Hotel
+@attribute [MustHavePermission(FSHAction.View, FSHResource.Rooms)]
+@inject IStringLocalizer<EditRooms> L
+
+
+<MudGrid>
+    <MudItem sm="12">
+        <EntityTable @ref="_table" TEntity="RoomDto" TId="Guid" TRequest="RoomViewModel" Context="@Context">
+            <EditFormContent Context="context">
+
+                <MudItem xs="12">
+                    <CategoryAutocomplete For="@(() => context.RoomCategory.Id)" @bind-Value="context.RoomCategory.Id" />
+                </MudItem>
+                <MudItem xs="12">
+                    <RoomTypeAutocomplete For="@(()=> context.RoomType.Id)" @bind-Value="context.RoomType.Id"></RoomTypeAutocomplete>
+                </MudItem>
+                @if (Context.AddEditModal.IsCreate)
+                {
+                    <MudItem xs="6">
+                        <MudNumericField T="int" Min="1" Label="@L["Count"]" For="@(() => context.Count)" @bind-Value="context.Count" />
+                    </MudItem>
+                }
+                
+                <MudItem xs="6">
+                    <MudTextField Label="@L["Name"]" For="@(() => context.Name)" @bind-Value="context.Name" />
+                </MudItem>
+                
+                
+            </EditFormContent>
+        </EntityTable>
+    </MudItem>
+</MudGrid>
+
+<MudTable Hover="true" Striped="true" Breakpoint="Breakpoint.Sm" Height="500px" FixedHeader="true"
+          ServerData="@(new Func<TableState, Task<TableData<RoomDto>>>(ServerReload))"
+          GroupBy="@_groupDefinition"
+          GroupHeaderStyle="background-color:var(--mud-palette-background-grey)"
+          GroupFooterClass="mb-4"
+          Dense="false"
+          MultiSelection="false">
+    <HeaderContent>
+        <MudTh>Number</MudTh>
+        <MudTh>Category</MudTh>
+        <MudTh>Type</MudTh>
+        <MudTh>Short Code</MudTh>
+        <MudTh>Status</MudTh>
+    </HeaderContent>
+    <GroupHeaderTemplate>
+        <MudTh Class="mud-table-cell-custom-group" colspan="6">@($"{context.GroupName}: ")<b>@context.Key</b></MudTh>
+    </GroupHeaderTemplate>
+    <RowTemplate>
+        <MudTd DataLabel="Nr"><b>@context.Name</b></MudTd>
+        <MudTd DataLabel="Sign">@context.RoomCategory.Name</MudTd>
+        <MudTd DataLabel="Name">@context.RoomType.Name</MudTd>
+        <MudTd DataLabel="Group">@context.Code</MudTd>
+        <MudTd DataLabel="Position">@context.RoomStatus</MudTd>
+    </RowTemplate>
+        <PagerContent>
+            <MudTablePager/>
+        </PagerContent>
+</MudTable>

@@ -1,7 +1,7 @@
 ﻿using FSH.BlazorWebAssembly.Client.Components.EntityTable;
 using FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient;
 using FSH.BlazorWebAssembly.Client.Infrastructure.Auth;
-using FSH.WebApi.Shared.Authorization;
+using HMS.Api.Shared.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -33,7 +33,7 @@ public partial class Roles
             searchAction: FSHAction.View,
             fields: new()
             {
-                new(role => role.Id, L["Id"]),
+                //new(role => role.Id, L["Id"]),
                 new(role => role.Name, L["Name"]),
                 new(role => role.Description, L["Description"])
             },

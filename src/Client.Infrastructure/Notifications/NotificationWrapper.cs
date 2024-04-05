@@ -1,4 +1,4 @@
-using FSH.WebApi.Shared.Notifications;
+using HMS.Api.Shared.Notifications;
 using MediatR;
 
 namespace FSH.BlazorWebAssembly.Client.Infrastructure.Notifications;

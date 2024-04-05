@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
 
-namespace FSH.WebApi.Shared.Authorization;
+namespace HMS.Api.Shared.Authorization;
 
 public static class FSHAction
 {
@@ -26,6 +26,11 @@ public static class FSHResource
     public const string RoleClaims = nameof(RoleClaims);
     public const string Products = nameof(Products);
     public const string Brands = nameof(Brands);
+    public const string RoomTypes = nameof(RoomTypes);
+    public const string RoomBeds = nameof(RoomBeds);
+    public const string RoomsCategories = nameof(RoomsCategories);
+    public const string Rooms = nameof(Rooms);
+    
 }
 
 public static class FSHPermissions
@@ -64,7 +69,35 @@ public static class FSHPermissions
         new("View Tenants", FSHAction.View, FSHResource.Tenants, IsRoot: true),
         new("Create Tenants", FSHAction.Create, FSHResource.Tenants, IsRoot: true),
         new("Update Tenants", FSHAction.Update, FSHResource.Tenants, IsRoot: true),
-        new("Upgrade Tenant Subscription", FSHAction.UpgradeSubscription, FSHResource.Tenants, IsRoot: true)
+        new("Upgrade Tenant Subscription", FSHAction.UpgradeSubscription, FSHResource.Tenants, IsRoot: true),
+
+        new("View Room Types", FSHAction.View, FSHResource.RoomTypes, IsBasic: true),
+        new("Search Room Types", FSHAction.Search, FSHResource.RoomTypes, IsBasic: true),
+        new("Create Room Types", FSHAction.Create, FSHResource.RoomTypes),
+        new("Update Room Types", FSHAction.Update, FSHResource.RoomTypes),
+        new("Delete Room Types", FSHAction.Delete, FSHResource.RoomTypes),
+        new("Export Room Types", FSHAction.Export, FSHResource.RoomTypes),
+
+        new("View Room Beds", FSHAction.View, FSHResource.RoomBeds, IsBasic: true),
+        new("Search Room Beds", FSHAction.Search, FSHResource.RoomBeds, IsBasic: true),
+        new("Create Room Beds", FSHAction.Create, FSHResource.RoomBeds),
+        new("Update Room Beds", FSHAction.Update, FSHResource.RoomBeds),
+        new("Delete Room Beds", FSHAction.Delete, FSHResource.RoomBeds),
+        new("Export Room Beds", FSHAction.Export, FSHResource.RoomBeds),
+
+        new("View Rooms", FSHAction.View, FSHResource.Rooms, IsBasic: true),
+        new("Search Rooms", FSHAction.Search, FSHResource.Rooms, IsBasic: true),
+        new("Create Rooms", FSHAction.Create, FSHResource.Rooms),
+        new("Update Rooms", FSHAction.Update, FSHResource.Rooms),
+        new("Delete Rooms", FSHAction.Delete, FSHResource.Rooms),
+        new("Export Rooms", FSHAction.Export, FSHResource.Rooms),
+
+        new("View Room Categories", FSHAction.View, FSHResource.RoomsCategories, IsBasic: true),
+        new("Search Room Categories", FSHAction.Search, FSHResource.RoomsCategories, IsBasic: true),
+        new("Create Room Category", FSHAction.Create, FSHResource.RoomsCategories),
+        new("Update Room Category", FSHAction.Update, FSHResource.RoomsCategories),
+        new("Delete Room Category", FSHAction.Delete, FSHResource.RoomsCategories),
+        new("Export Room Categories", FSHAction.Export, FSHResource.RoomsCategories),
     };
 
     public static IReadOnlyList<FSHPermission> All { get; } = new ReadOnlyCollection<FSHPermission>(_all);

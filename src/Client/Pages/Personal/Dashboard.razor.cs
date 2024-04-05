@@ -2,7 +2,7 @@
 using FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient;
 using FSH.BlazorWebAssembly.Client.Infrastructure.Notifications;
 using FSH.BlazorWebAssembly.Client.Shared;
-using FSH.WebApi.Shared.Notifications;
+using HMS.Api.Shared.Notifications;
 using MediatR.Courier;
 using Microsoft.AspNetCore.Components;
 
@@ -18,6 +18,9 @@ public partial class Dashboard
     public int UserCount { get; set; }
     [Parameter]
     public int RoleCount { get; set; }
+
+    [Parameter]
+    public int RoomCategoriesCount { get; set; }
 
     [Inject]
     private IDashboardClient DashboardClient { get; set; } = default!;
@@ -44,7 +47,7 @@ public partial class Dashboard
     private async Task LoadDataAsync()
     {
         if (await ApiHelper.ExecuteCallGuardedAsync(
-                () => DashboardClient.GetAsync(),
+                () => DashboardClient.GetAsync("1"),
                 Snackbar)
             is StatsDto statsDto)
         {
@@ -52,6 +55,7 @@ public partial class Dashboard
             BrandCount = statsDto.BrandCount;
             UserCount = statsDto.UserCount;
             RoleCount = statsDto.RoleCount;
+            RoomCategoriesCount = statsDto.RoomCategoryCount;
             foreach (var item in statsDto.DataEnterBarChart)
             {
                 _dataEnterBarChartSeries

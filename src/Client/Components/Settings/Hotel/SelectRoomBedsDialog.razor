@@ -1,0 +1,118 @@
+﻿@using FSH.BlazorWebAssembly.Client.Infrastructure.Tools
+<MudDialog>
+    <DialogContent>
+        <MudTable @ref="_mudTable" Striped="true" Items="@RoomBedVms" Dense="true" Loading="_loading" Elevation="0" MultiSelection="true" @bind-SelectedItems="_selectedItems" Hover="true">
+            <ToolBarContent>
+                <MudAlert Severity="Severity.Info">Mark Your Preferred Beds and Specify Quantity</MudAlert>
+                <MudSpacer/>
+                <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.Edit" Size="Size.Medium" OnClick="EditBeds" Color="Color.Primary">Edit</MudButton>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh>Name</MudTh>
+                <MudTh>Description</MudTh>
+                <MudTh>Size</MudTh>
+                <MudTh>Мax Occupancy</MudTh>
+                <MudTh>Extra Bed</MudTh>
+                <MudTh>Sofa Bed</MudTh>
+                <MudTh>Rollaway Bed</MudTh>
+                <MudTh Style="width:100px">Count</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Description">@TextTools.TruncateText(context.Description, 100)</MudTd>
+                <MudTd DataLabel="Size">@context.Size</MudTd>
+                <MudTd DataLabel="MaxOccupancy">@context.MaxOccupancy</MudTd>
+                <MudTd DataLabel="IsExtraBed">@context.IsExtraBed</MudTd>
+                <MudTd DataLabel="IsSofaBed">@context.IsSofaBed</MudTd>
+                <MudTd DataLabel="IsRollawayBed">@context.IsRollawayBed</MudTd>
+                <MudTd DataLabel="Count">
+                    <MudNumericField @bind-Value="@context.Quantity" Variant="Variant.Outlined" Min="1" Max="10" Margin="Margin.Dense"/>
+                </MudTd>
+            </RowTemplate>
+            
+            <PagerContent>
+            @if (RoomBedVms is {Count: > 10})
+            {
+                <MudTablePager PageSizeOptions="new[] {10}"/>
+            }
+            </PagerContent>
+            
+            
+        </MudTable>
+
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Ok">Save</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter]
+    [EditorRequired]
+    public List<RoomBedRoomTypeDto> RoomBedVmsParam { get; set; } = new();
+
+    [Inject]
+    protected IRoomBedsClient RoomBedsClient { get; set; } = default!;
+
+    public List<RoomBedDtoWithQuantity>? RoomBedVms = new();
+
+    private HashSet<RoomBedDtoWithQuantity> _selectedItems = new();
+
+    private MudTable<RoomBedDtoWithQuantity> _mudTable;
+
+    private bool _loading;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        MudDialog.Options.CloseButton = true;
+        MudDialog.Options.MaxWidth = MaxWidth.Large;
+        MudDialog.SetOptions(MudDialog.Options);
+
+        _loading = true;
+
+        var result = await ApiHelper.ExecuteCallGuardedAsync(() => RoomBedsClient.SearchAsync("1", new SearchRoomBedRequest { PageNumber = 0, PageSize = 100 }), Snackbar);
+
+        RoomBedVms = result?.Data.Adapt<List<RoomBedDtoWithQuantity>>();
+
+            foreach (var item in RoomBedVmsParam)
+            {
+                RoomBedDtoWithQuantity? first = null;
+                if (RoomBedVms != null)
+                {
+                    foreach (var x in RoomBedVms.Where(x => x.Id == item.RoomBedId))
+                    {
+                        first = x;
+                        break;
+                    }
+
+                    if (first != null) first.Quantity = item.Quantity;
+                    _selectedItems.Add(RoomBedVms.First(x => x.Id == item.RoomBedId));
+                }
+            }
+        
+        
+        _loading = false;
+    }
+
+    private void Ok()
+    {
+        MudDialog.Close(DialogResult.Ok(_selectedItems.ToList()));
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private void EditBeds()
+    {
+        Navigation.NavigateTo("/settings/beds");
+    } 
+
+    public class RoomBedDtoWithQuantity : RoomBedDto
+    {
+        public int Quantity { get; set; } = 1;
+    }
+}

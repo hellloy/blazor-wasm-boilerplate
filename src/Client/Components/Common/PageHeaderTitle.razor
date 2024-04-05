@@ -1,0 +1,11 @@
+﻿<MudText Typo="Typo.h5" Color="Color.Dark"  Inline="true" >
+    @Title
+    <small style="font-size: 18px;color:#999999">@Description</small>
+</MudText>
+
+
+@code
+{
+    [Parameter] public string Title { get; set; }
+    [Parameter] public string Description { get; set; }
+}

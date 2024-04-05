@@ -1,7 +1,7 @@
 ﻿using FSH.BlazorWebAssembly.Client.Components.EntityTable;
 using FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient;
 using FSH.BlazorWebAssembly.Client.Infrastructure.Common;
-using FSH.WebApi.Shared.Authorization;
+using HMS.Api.Shared.Authorization;
 using Mapster;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -43,7 +43,7 @@ public partial class Products
                 productFilter.MinimumRate = SearchMinimumRate;
                 productFilter.MaximumRate = SearchMaximumRate;
 
-                var result = await ProductsClient.SearchAsync(productFilter);
+                var result = await ProductsClient.SearchAsync("1",productFilter);
                 return result.Adapt<PaginationResponse<ProductDto>>();
             },
             createFunc: async prod =>
@@ -53,7 +53,7 @@ public partial class Products
                     prod.Image = new FileUploadRequest() { Data = prod.ImageInBytes, Extension = prod.ImageExtension ?? string.Empty, Name = $"{prod.Name}_{Guid.NewGuid():N}" };
                 }
 
-                await ProductsClient.CreateAsync(prod.Adapt<CreateProductRequest>());
+                await ProductsClient.CreateAsync("1",prod.Adapt<CreateProductRequest>());
                 prod.ImageInBytes = string.Empty;
             },
             updateFunc: async (id, prod) =>
@@ -64,7 +64,7 @@ public partial class Products
                     prod.Image = new FileUploadRequest() { Data = prod.ImageInBytes, Extension = prod.ImageExtension ?? string.Empty, Name = $"{prod.Name}_{Guid.NewGuid():N}" };
                 }
 
-                await ProductsClient.UpdateAsync(id, prod.Adapt<UpdateProductRequest>());
+                await ProductsClient.UpdateAsync(id,"1", prod.Adapt<UpdateProductRequest>());
                 prod.ImageInBytes = string.Empty;
             },
             exportFunc: async filter =>
@@ -75,9 +75,9 @@ public partial class Products
                 exportFilter.MinimumRate = SearchMinimumRate;
                 exportFilter.MaximumRate = SearchMaximumRate;
 
-                return await ProductsClient.ExportAsync(exportFilter);
+                return await ProductsClient.ExportAsync("1",exportFilter);
             },
-            deleteFunc: async id => await ProductsClient.DeleteAsync(id));
+            deleteFunc: async id => await ProductsClient.DeleteAsync(id,"1"));
 
     // Advanced Search
 

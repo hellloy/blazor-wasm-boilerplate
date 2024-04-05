@@ -38,7 +38,7 @@ public class BrandAutocomplete : MudAutocomplete<Guid>
         if (firstRender &&
             _value != default &&
             await ApiHelper.ExecuteCallGuardedAsync(
-                () => BrandsClient.GetAsync(_value), Snackbar) is { } brand)
+                () => BrandsClient.GetAsync(_value, "1"), Snackbar) is { } brand)
         {
             _brands.Add(brand);
             ForceRender(true);
@@ -54,7 +54,7 @@ public class BrandAutocomplete : MudAutocomplete<Guid>
         };
 
         if (await ApiHelper.ExecuteCallGuardedAsync(
-                () => BrandsClient.SearchAsync(filter), Snackbar)
+                () => BrandsClient.SearchAsync("1",filter), Snackbar)
             is PaginationResponseOfBrandDto response)
         {
             _brands = response.Data.ToList();

@@ -1,0 +1,40 @@
+﻿
+
+
+@attribute [MustHavePermission(FSHAction.View, FSHResource.RoomsCategories)]
+
+@inject IStringLocalizer<EditRoomCategories> L
+@* <FshTitle Title="@L["Categories"]" Description="@L["Manage Categories."]" /> *@
+<MudGrid>
+    <MudItem sm="12">
+        <EntityTable @ref="_table" TEntity="RoomCategoryDto" TId="Guid" TRequest="RoomCategoryViewModel" Context="@Context">
+
+            @* <AdvancedSearchContent>
+                <BrandAutocomplete @bind-Value="SearchCategoryName" />
+            </AdvancedSearchContent>*@
+            
+            <ExtraActions>
+              
+                    <MudMenuItem>@L["Manage Permission"]</MudMenuItem>
+                
+            </ExtraActions>
+            <EditFormContent Context="context">
+                @if (!Context.AddEditModal.IsCreate)
+                {
+                    <MudItem xs="12">
+                        <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"Product Id"]" />
+                    </MudItem>
+                }
+                <MudItem xs="12" >
+                    <MudTextField Label="@L["Name"]" For="@(() => context.Name)" @bind-Value="context.Name" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField Label="@L["Сode"]" For="@(() => context.Code)" @bind-Value="context.Code" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField Label="@L["Description"]" For="@(() => context.Description)" @bind-Value="context.Description" />
+                </MudItem>
+            </EditFormContent>
+        </EntityTable>
+    </MudItem>
+</MudGrid>
